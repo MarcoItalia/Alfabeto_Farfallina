@@ -80,6 +80,7 @@ void Lista::inserisci(Nodo* precedente, int val){
     nuovo->succ=precedente->succ;
     precedente->succ = nuovo;
 }
+// questo è un test
 
 void Lista::inserisci_in_coda(int val){
     Nodo* nuovo = new Nodo;
