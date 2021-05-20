@@ -9,7 +9,12 @@
 */
 
 #include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
+
+ifstream in("input.txt");
+ofstream out("output.txt");
 
 class Nodo{
 public:
@@ -73,34 +78,39 @@ void Lista::inserisci(int val){
 
     this->testa = nuovo;
 }
-// TODO: eliminare il parametro 'seguente'
+
 void Lista::inserisci(Nodo* precedente, int val){
     Nodo* nuovo = new Nodo;
     nuovo->valore = val;
     nuovo->succ=precedente->succ;
+    precedente->succ->prec = nuovo;
     precedente->succ = nuovo;
+    nuovo->prec = precedente;
 }
+
 // questo è un test
 
 void Lista::inserisci_in_coda(int val){
-    Nodo* nuovo = new Nodo;
-    Nodo* iter = this->testa;
-
-    nuovo->valore = val;
+    
 
     if(this->testa == nullptr){
-        nuovo->succ = nullptr;
-        this->testa = nuovo;
+        inserisci(val);
+        return;
+        /*nuovo->succ = nullptr;
+        this->testa = nuovo;*/
     }
-    else{
-        while(iter->succ!=nullptr)
-            iter = iter->succ;
-        iter->succ=nuovo;
-        nuovo->succ=nullptr;
 
-    }
+    Nodo* nuovo = new Nodo;
+    Nodo* iter = this->testa;
+    nuovo->valore = val;
+    while(iter->succ!=nullptr)
+        iter = iter->succ;
+    iter->succ=nuovo;
+    nuovo->succ=nullptr;
+    nuovo->prec=iter;
 
 }
+
 
 Nodo* Lista::ricerca(int val){
     Nodo *p;
@@ -114,27 +124,32 @@ Nodo* Lista::ricerca(int val){
 
 void Lista::rimuovi(int val){
 
-    Nodo* prec;
-    Nodo* current;
+    Nodo* nd;
 
     if(this->testa == nullptr)
         cout << "Lista vuota: impossibile rimuovere elementi."<<endl;
     else if(this->testa->valore == val){
-        prec = this->testa;
+        nd = this->testa;
         this->testa = this->testa->succ;
-        delete prec;
+        this->testa->prec=nullptr;
+        delete nd;
     }
     else{
-        prec = this->testa;
-        current = this->testa->succ;
-        while((current!=nullptr)&&(current->valore!= val)){
-            prec = prec->succ;
-            current = current->succ;
+        
+        nd = this->testa->succ;
+        while((nd!=nullptr)&&(nd->valore!= val)){
+            nd = nd->succ;
         }
 
-        if(current!=nullptr){
-            prec->succ = current->succ;
-            delete current;
+        if(nd!=nullptr){
+            if(nd->succ==nullptr)
+                nd->prec->succ = nullptr;
+            else {
+                nd->prec->succ = nd->succ;
+                nd->succ->prec = nd->prec;
+            }
+            
+            delete nd;
         }
         else
             cout << "Elemento non presente nella lista." << endl;
@@ -145,15 +160,32 @@ void Lista::rimuovi(int val){
 
 int main(){
 
-    Lista lista;
-    
-    lista.inserisci(20);
-    lista.inserisci(15);
-    lista.inserisci(10);
-    lista.inserisci(5);
+    /*Lista lista;
+    Nodo* punt;*/
+    string s;
 
-    cout<< lista;
-    
+    for(int task=0;task<100;task++){
+        getline(in,s);
+        for(int i=0;i<s.length();i++){
+            if(s[i]=='a')
+                out<< "afa";
+            else if(s[i]=='e')
+                out<<"efe";
+            else if(s[i]=='i')
+                out<<"ifi";
+            else if(s[i]=='o')
+                out<<"ofo";
+            else if(s[i]=='u')
+                out<<"ufu";
+            else out<<s[i];
+        }
+        out<<endl;
+
+
+
+    }
+
+
 return 0;
 }
 
